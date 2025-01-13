@@ -104,17 +104,17 @@ const playGame = (gameId: number) => {
 }
 
 // Modal to display the selected game
-const showGameModal = ref(false)
+// const showGameModal = ref(false)
 
-const openGameModal = (game: Game) => {
-  selectedGame.value = game
-  showGameModal.value = true
-}
+// const openGameModal = (game: Game) => {
+//   selectedGame.value = game
+//   showGameModal.value = true
+// }
 
-const closeGameModal = () => {
-  showGameModal.value = false
-  selectedGame.value = null
-}
+// const closeGameModal = () => {
+//   showGameModal.value = false
+//   selectedGame.value = null
+// }
 </script>
 
 <style scoped>
