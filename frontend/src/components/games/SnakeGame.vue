@@ -24,6 +24,8 @@
           height: `${Math.min(boardSize * 20, 400)}px`
         }"
       >
+        <!-- 
+          v-for="(cell, index) in cells"  -->
         <div 
           v-for="(index) in cells" 
           :key="index" 
