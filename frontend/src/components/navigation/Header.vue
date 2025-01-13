@@ -2,8 +2,10 @@
     <nav class="container mx-auto px-6 py-4">
       <div class="flex justify-between items-center">
         <div class="flex items-center">
-          <Gamepad2 class="w-8 h-8 text-purple-500 mr-2" />
-          <span class="text-2xl font-bold">GameHub</span>
+          <router-link to="/" class="flex items-center">
+            <Gamepad2 class="w-8 h-8 text-purple-500 mr-2" />
+            <span class="text-2xl font-bold">GameHub</span>
+          </router-link>
         </div>
         
         <!-- Desktop Menu -->
@@ -52,6 +54,7 @@
     { name: 'Home', path: '/' },
     { name: 'Games', path: '/games' },
     { name: 'About', path: '/about' },
+    { name: 'Login', path: '/login' },
     // { name: 'Community', path: '/community' },
     // { name: 'Support', path: '/support' }
   ]

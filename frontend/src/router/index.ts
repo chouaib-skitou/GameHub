@@ -4,6 +4,10 @@ import Games from '../views/Games.vue'
 import About from '../views/About.vue'
 import XOGame from '../components/games/XOGame.vue'
 import SnakeGame from '../components/games/SnakeGame.vue'
+import Login from '../views/auth/Login.vue'
+import Register from '../views/auth/Register.vue'
+import ResetPasswordRequest from '../views/auth/ResetPasswordRequest.vue'
+import ResetPassword from '../views/auth/ResetPassword.vue'
 
 const routes = [
   {
@@ -30,6 +34,26 @@ const routes = [
     path: '/games/snake',
     name: 'SnakeGame',
     component: SnakeGame
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+  {
+    path: '/reset-password-request',
+    name: 'ResetPasswordRequest',
+    component: ResetPasswordRequest
+  },
+  {
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: ResetPassword
   }
 ]
 
