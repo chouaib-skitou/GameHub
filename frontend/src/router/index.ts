@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import Games from '../views/Games.vue'
 import About from '../views/About.vue'
+import XOGame from '../components/games/XOGame.vue'
 
-const routes: RouteRecordRaw[] = [
+const routes = [
   {
     path: '/',
     name: 'Home',
@@ -20,12 +20,17 @@ const routes: RouteRecordRaw[] = [
     name: 'About',
     component: About
   },
-  // Add more routes here as needed
+  {
+    path: '/games/xo',
+    name: 'XOGame',
+    component: XOGame
+  }
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes
 })
 
 export default router
+
