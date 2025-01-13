@@ -3,7 +3,7 @@
       <h1 class="text-4xl font-bold mb-8 text-purple-500">Tic-Tac-Toe</h1>
       
       <div class="mb-4 text-xl text-white">
-        {{ winner ? `Player ${winner} wins!` : `Player ${currentPlayer}'s turn` }}
+        {{ winner ? (winner === 'Draw' ? "It's a draw!" : `Player ${winner} wins!`) : `Player ${currentPlayer}'s turn` }}
       </div>
       
       <div class="grid grid-cols-3 gap-2 mb-8">
@@ -16,7 +16,7 @@
             { 'text-purple-500': cell === 'X', 'text-green-500': cell === 'O' },
             { 'bg-[#2d1f55] hover:bg-[#2d1f55]': isWinningCell(index) }
           ]"
-          :disabled="cell !== null || winner"
+          :disabled="!!cell || !!winner"
         >
           {{ cell }}
         </button>
@@ -34,9 +34,12 @@
   <script setup lang="ts">
   import { ref } from 'vue'
   
-  const board = ref(Array(9).fill(null))
-  const currentPlayer = ref('X')
-  const winner = ref(null)
+  type Player = 'X' | 'O' | null
+  type GameResult = Player | 'Draw'
+  
+  const board = ref<Player[]>(Array(9).fill(null))
+  const currentPlayer = ref<'X' | 'O'>('X')
+  const winner = ref<GameResult>(null)
   const winningCells = ref<number[]>([])
   
   const winningCombinations = [
