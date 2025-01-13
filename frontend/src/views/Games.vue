@@ -54,8 +54,11 @@
 </template>
 
 <script setup lang="ts">
-import { Users, Square, Zap, Users2, Trophy, Swords, Puzzle } from 'lucide-vue-next'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { Users, Square, Zap } from 'lucide-vue-next'
+import XOGame from '../components/games/XOGame.vue'
+import SnakeGame from '../components/games/SnakeGame.vue'
 
 interface Game {
   id: number
@@ -64,18 +67,20 @@ interface Game {
   players: string
   icon: any
   route: string
+  component: any
 }
 
 const router = useRouter()
 
-const games: Game[] = [
+const games = ref<Game[]>([
   {
     id: 1,
     name: 'Tic-Tac-Toe',
-    description: 'Classic game of X\'s and O\'s. Challenge your friends or play against AI!',
-    players: '1-2',
+    description: 'Classic game of X\'s and O\'s. Challenge your friends!',
+    players: '2',
     icon: Square,
-    route: '/games/xo'
+    route: '/games/xo',
+    component: XOGame
   },
   {
     id: 2,
@@ -83,47 +88,32 @@ const games: Game[] = [
     description: 'Eat, grow, and don\'t hit the walls! How long can you survive?',
     players: '1',
     icon: Zap,
-    route: '/games/snake'
-  },
-  {
-    id: 3,
-    name: 'Memory Cards',
-    description: 'Test your memory skills by matching pairs of cards.',
-    players: '1-4',
-    icon: Users2,
-    route: '/games/memory'
-  },
-  {
-    id: 4,
-    name: 'Chess',
-    description: 'The ultimate game of strategy. Challenge players worldwide!',
-    players: '2',
-    icon: Trophy,
-    route: '/games/chess'
-  },
-  {
-    id: 5,
-    name: 'Battle Arena',
-    description: 'Fast-paced multiplayer battles in various game modes.',
-    players: '2-4',
-    icon: Swords,
-    route: '/games/battle-arena'
-  },
-  {
-    id: 6,
-    name: 'Puzzle Master',
-    description: 'Collection of brain-teasing puzzles for all skill levels.',
-    players: '1',
-    icon: Puzzle,
-    route: '/games/puzzle-master'
+    route: '/games/snake',
+    component: SnakeGame
   }
-]
+])
+
+const selectedGame = ref<Game | null>(null)
 
 const playGame = (gameId: number) => {
-  const game = games.find(g => g.id === gameId)
+  const game = games.value.find(g => g.id === gameId)
   if (game) {
+    selectedGame.value = game
     router.push(game.route)
   }
+}
+
+// Modal to display the selected game
+const showGameModal = ref(false)
+
+const openGameModal = (game: Game) => {
+  selectedGame.value = game
+  showGameModal.value = true
+}
+
+const closeGameModal = () => {
+  showGameModal.value = false
+  selectedGame.value = null
 }
 </script>
 

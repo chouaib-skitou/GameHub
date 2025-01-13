@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Games from '../views/Games.vue'
 import About from '../views/About.vue'
 import XOGame from '../components/games/XOGame.vue'
+import SnakeGame from '../components/games/SnakeGame.vue'
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/games/xo',
     name: 'XOGame',
     component: XOGame
+  },
+  {
+    path: '/games/snake',
+    name: 'SnakeGame',
+    component: SnakeGame
   }
 ]
 
