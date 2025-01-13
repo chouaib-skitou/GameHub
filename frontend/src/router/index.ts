@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import Home from '@/views/Home.vue'
-import Games from '@/views/Games.vue'
-import About from '@/views/About.vue'
+import Home from '../views/Home.vue'
+import Games from '../views/Games.vue'
+import About from '../views/About.vue'
 
 const routes: RouteRecordRaw[] = [
   {

@@ -7,6 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@/components/navigation/Header.vue';
-import Footer from '@/components/navigation/Footer.vue';
+import Header from './components/navigation/Header.vue';
+import Footer from './components/navigation/Footer.vue';
 </script>

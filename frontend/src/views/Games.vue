@@ -54,7 +54,7 @@
   </template>
   
   <script setup lang="ts">
-  import { Users, Square, Zap, Users2, Trophy, Swords, Puzzle, Target, Dice } from 'lucide-vue-next'
+  import { Users, Square, Zap, Users2, Trophy, Swords, Puzzle } from 'lucide-vue-next'
   
   interface Game {
     id: number
