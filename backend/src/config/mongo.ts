@@ -1,8 +1,15 @@
 import mongoose from 'mongoose';
 
-const connectDB  = async (): Promise<void> => {
+const connectDB = async (): Promise<void> => {
+  const mongoURI = process.env.MONGO_URI;
+
+  if (!mongoURI) {
+    console.error('MONGO_URI is not defined in the environment variables');
+    process.exit(1); // Exit the process if MONGO_URI is not found
+  }
+
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
