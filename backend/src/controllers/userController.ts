@@ -7,9 +7,12 @@ export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await User.find();
     const userResponse: UserResponseDTO[] = users.map((user) => {
-      // Exclude password field
-      const { password, ...userWithoutPassword } = user.toObject();
-      return userWithoutPassword as UserResponseDTO;
+      const { password, createdAt, updatedAt, ...userWithoutPassword } = user.toObject();
+      return {
+        ...userWithoutPassword,
+        createdAt: createdAt.toISOString(), // Convert Date to string
+        updatedAt: updatedAt.toISOString(), // Convert Date to string
+      } as UserResponseDTO;
     });
     res.json(userResponse);
   } catch (error) {
@@ -25,8 +28,12 @@ export const getUser = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    const { password, ...userWithoutPassword } = user.toObject();
-    res.json(userWithoutPassword);
+    const { password, createdAt, updatedAt, ...userWithoutPassword } = user.toObject();
+    res.json({
+      ...userWithoutPassword,
+      createdAt: createdAt.toISOString(),
+      updatedAt: updatedAt.toISOString(),
+    });
   } catch (error) {
     res.status(500).json({ error: 'Error retrieving user' });
   }
