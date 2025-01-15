@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import User, { IUser } from '../models/User';
 import { CreateUserDTO, UpdateUserDTO, UserResponseDTO } from '../dtos/UserDTO';
 
-// Get all users
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await User.find();
@@ -10,7 +10,7 @@ export const getUsers = async (req: Request, res: Response) => {
       const { password, ...userWithoutPassword } = user.toObject();
       return {
         ...userWithoutPassword,
-        id: user._id.toString(),
+        id: (user._id as mongoose.Types.ObjectId).toString(),
         createdAt: user.createdAt.toISOString(),
         updatedAt: user.updatedAt.toISOString(),
       } as UserResponseDTO;
@@ -22,7 +22,6 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-// Get a single user by ID
 export const getUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -33,7 +32,7 @@ export const getUser = async (req: Request, res: Response) => {
     const { password, ...userWithoutPassword } = user.toObject();
     const userResponse: UserResponseDTO = {
       ...userWithoutPassword,
-      id: user._id.toString(),
+      id: (user._id as mongoose.Types.ObjectId).toString(),
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     };
@@ -44,27 +43,26 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
-// Create a new user
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { username, name, email, password }: CreateUserDTO = req.body;
 
-    // Validate input
-    if (!username || !name || !email || !password) {
-      return res.status(400).json({ error: 'Username, name, email, and password are required' });
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email, and password are required' });
     }
 
-    // Check if user with this email or username already exists
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    const derivedUsername = username || email.split('@')[0];
+
+    const existingUser = await User.findOne({ $or: [{ email }, { username: derivedUsername }] });
     if (existingUser) {
       return res.status(409).json({ error: 'User with this email or username already exists' });
     }
 
-    const newUser: IUser = new User({ username, name, email, password });
+    const newUser: IUser = new User({ username: derivedUsername, name, email, password });
     const savedUser = await newUser.save();
 
     const userResponse: UserResponseDTO = {
-      id: savedUser._id.toString(),
+      id: (savedUser._id as mongoose.Types.ObjectId).toString(),
       username: savedUser.username,
       name: savedUser.name,
       email: savedUser.email,
@@ -79,7 +77,6 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-// Update a user
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -91,7 +88,7 @@ export const updateUser = async (req: Request, res: Response) => {
     const { password, ...userWithoutPassword } = updatedUser.toObject();
     const userResponse: UserResponseDTO = {
       ...userWithoutPassword,
-      id: updatedUser._id.toString(),
+      id: (updatedUser._id as mongoose.Types.ObjectId).toString(),
       createdAt: updatedUser.createdAt.toISOString(),
       updatedAt: updatedUser.updatedAt.toISOString(),
     };
@@ -102,7 +99,6 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a user
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -116,4 +112,3 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(400).json({ error: 'Error deleting user' });
   }
 };
-

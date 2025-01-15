@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import {
   getUsers,
   getUser,
@@ -33,7 +33,6 @@ const router = Router();
  *     CreateUserDTO:
  *       type: object
  *       required:
- *         - username
  *         - name
  *         - email
  *         - password
@@ -75,7 +74,9 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/', getUsers);
+router.get('/', (req: Request, res: Response, next: NextFunction) => {
+  getUsers(req, res).catch(next);
+});
 
 /**
  * @swagger
@@ -100,7 +101,9 @@ router.get('/', getUsers);
  *       404:
  *         description: User not found.
  */
-router.get('/:id', getUser);
+router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
+  getUser(req, res).catch(next);
+});
 
 /**
  * @swagger
@@ -126,7 +129,9 @@ router.get('/:id', getUser);
  *       409:
  *         description: User with this email or username already exists.
  */
-router.post('/', createUser);
+router.post('/', (req: Request, res: Response, next: NextFunction) => {
+  createUser(req, res).catch(next);
+});
 
 /**
  * @swagger
@@ -157,7 +162,9 @@ router.post('/', createUser);
  *       404:
  *         description: User not found.
  */
-router.put('/:id', updateUser);
+router.put('/:id', (req: Request, res: Response, next: NextFunction) => {
+  updateUser(req, res).catch(next);
+});
 
 /**
  * @swagger
@@ -178,7 +185,9 @@ router.put('/:id', updateUser);
  *       404:
  *         description: User not found.
  */
-router.delete('/:id', deleteUser);
+router.delete('/:id', (req: Request, res: Response, next: NextFunction) => {
+  deleteUser(req, res).catch(next);
+});
 
 export default router;
 
