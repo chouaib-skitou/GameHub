@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getUsers,
+  getUser,
   createUser,
   updateUser,
   deleteUser,
@@ -17,11 +18,11 @@ const router = Router();
  *       properties:
  *         id:
  *           type: string
+ *         username:
+ *           type: string
  *         name:
  *           type: string
  *         email:
- *           type: string
- *         password:
  *           type: string
  *         createdAt:
  *           type: string
@@ -31,7 +32,14 @@ const router = Router();
  *           format: date-time
  *     CreateUserDTO:
  *       type: object
+ *       required:
+ *         - username
+ *         - name
+ *         - email
+ *         - password
  *       properties:
+ *         username:
+ *           type: string
  *         name:
  *           type: string
  *         email:
@@ -41,6 +49,8 @@ const router = Router();
  *     UpdateUserDTO:
  *       type: object
  *       properties:
+ *         username:
+ *           type: string
  *         name:
  *           type: string
  *         email:
@@ -69,6 +79,31 @@ router.get('/', getUsers);
 
 /**
  * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get a user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A user object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ */
+router.get('/:id', getUser);
+
+/**
+ * @swagger
  * /users:
  *   post:
  *     summary: Create a new user
@@ -82,6 +117,14 @@ router.get('/', getUsers);
  *     responses:
  *       201:
  *         description: User created successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid input data.
+ *       409:
+ *         description: User with this email or username already exists.
  */
 router.post('/', createUser);
 
@@ -107,6 +150,12 @@ router.post('/', createUser);
  *     responses:
  *       200:
  *         description: User updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
  */
 router.put('/:id', updateUser);
 
@@ -126,7 +175,10 @@ router.put('/:id', updateUser);
  *     responses:
  *       204:
  *         description: User deleted successfully.
+ *       404:
+ *         description: User not found.
  */
 router.delete('/:id', deleteUser);
 
 export default router;
+

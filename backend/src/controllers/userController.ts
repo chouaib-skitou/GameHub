@@ -7,15 +7,17 @@ export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await User.find();
     const userResponse: UserResponseDTO[] = users.map((user) => {
-      const { password, createdAt, updatedAt, ...userWithoutPassword } = user.toObject();
+      const { password, ...userWithoutPassword } = user.toObject();
       return {
         ...userWithoutPassword,
-        createdAt: createdAt.toISOString(), // Convert Date to string
-        updatedAt: updatedAt.toISOString(), // Convert Date to string
+        id: user._id.toString(),
+        createdAt: user.createdAt.toISOString(),
+        updatedAt: user.updatedAt.toISOString(),
       } as UserResponseDTO;
     });
     res.json(userResponse);
   } catch (error) {
+    console.error('Error retrieving users:', error);
     res.status(500).json({ error: 'Error retrieving users' });
   }
 };
@@ -28,13 +30,16 @@ export const getUser = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    const { password, createdAt, updatedAt, ...userWithoutPassword } = user.toObject();
-    res.json({
+    const { password, ...userWithoutPassword } = user.toObject();
+    const userResponse: UserResponseDTO = {
       ...userWithoutPassword,
-      createdAt: createdAt.toISOString(),
-      updatedAt: updatedAt.toISOString(),
-    });
+      id: user._id.toString(),
+      createdAt: user.createdAt.toISOString(),
+      updatedAt: user.updatedAt.toISOString(),
+    };
+    res.json(userResponse);
   } catch (error) {
+    console.error('Error retrieving user:', error);
     res.status(500).json({ error: 'Error retrieving user' });
   }
 };
@@ -42,12 +47,35 @@ export const getUser = async (req: Request, res: Response) => {
 // Create a new user
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const user: CreateUserDTO = req.body;
-    const newUser: IUser = new User(user);
+    const { username, name, email, password }: CreateUserDTO = req.body;
+
+    // Validate input
+    if (!username || !name || !email || !password) {
+      return res.status(400).json({ error: 'Username, name, email, and password are required' });
+    }
+
+    // Check if user with this email or username already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      return res.status(409).json({ error: 'User with this email or username already exists' });
+    }
+
+    const newUser: IUser = new User({ username, name, email, password });
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+
+    const userResponse: UserResponseDTO = {
+      id: savedUser._id.toString(),
+      username: savedUser.username,
+      name: savedUser.name,
+      email: savedUser.email,
+      createdAt: savedUser.createdAt.toISOString(),
+      updatedAt: savedUser.updatedAt.toISOString(),
+    };
+
+    res.status(201).json(userResponse);
   } catch (error) {
-    res.status(400).json({ error: 'Error creating user' });
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Error creating user', details: (error as Error).message });
   }
 };
 
@@ -60,8 +88,16 @@ export const updateUser = async (req: Request, res: Response) => {
     if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
     }
-    res.json(updatedUser);
+    const { password, ...userWithoutPassword } = updatedUser.toObject();
+    const userResponse: UserResponseDTO = {
+      ...userWithoutPassword,
+      id: updatedUser._id.toString(),
+      createdAt: updatedUser.createdAt.toISOString(),
+      updatedAt: updatedUser.updatedAt.toISOString(),
+    };
+    res.json(userResponse);
   } catch (error) {
+    console.error('Error updating user:', error);
     res.status(400).json({ error: 'Error updating user' });
   }
 };
@@ -76,6 +112,8 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
     res.status(204).send();
   } catch (error) {
+    console.error('Error deleting user:', error);
     res.status(400).json({ error: 'Error deleting user' });
   }
 };
+
