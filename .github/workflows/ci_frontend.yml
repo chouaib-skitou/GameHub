@@ -1,4 +1,4 @@
-name: CI Backend Workflow
+name: CI Frontend Workflow
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main  # Trigger workflow for pull requests to the main branch
 
 env:
-  Backend_dir: /home/runner/work/GameHub/GameHub/backend  # Define the backend directory
+  Frontend_dir: /home/runner/work/GameHub/GameHub/frontend  # Define the frontend directory
 
 jobs:
   build:
@@ -19,8 +19,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Navigate to backend directory
-        run: cd ${{ env.Backend_dir }}
+      - name: Navigate to frontend directory
+        run: cd ${{ env.Frontend_dir }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -29,25 +29,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd ${{ env.Backend_dir }}
-          npm ci
+          cd ${{ env.Frontend_dir }}
+          npm install
 
-      - name: Run ESLint
+      - name: Run Prettier
         run: |
-          cd ${{ env.Backend_dir }}
-          npm run lint
-
-      - name: Run tests
-        run: |
-          cd ${{ env.Backend_dir }}
-          npm test
+          cd ${{ env.Frontend_dir }}
+          npm run format
 
       - name: Build the project
         run: |
-          cd ${{ env.Backend_dir }}
+          cd ${{ env.Frontend_dir }}
           npm run build
-
-      - name: Check TypeScript compilation
-        run: |
-          cd ${{ env.Backend_dir }}
-          npm run type-check
