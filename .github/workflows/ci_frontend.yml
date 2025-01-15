@@ -1,0 +1,53 @@
+name: CI Backend Workflow
+
+on:
+  push:
+    branches:
+      - '*'  # Trigger workflow for all branches
+  pull_request:
+    branches:
+      - main  # Trigger workflow for pull requests to the main branch
+
+env:
+  Backend_dir: /home/runner/work/GameHub/GameHub/backend  # Define the backend directory
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Navigate to backend directory
+        run: cd ${{ env.Backend_dir }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd ${{ env.Backend_dir }}
+          npm ci
+
+      - name: Run ESLint
+        run: |
+          cd ${{ env.Backend_dir }}
+          npm run lint
+
+      - name: Run tests
+        run: |
+          cd ${{ env.Backend_dir }}
+          npm test
+
+      - name: Build the project
+        run: |
+          cd ${{ env.Backend_dir }}
+          npm run build
+
+      - name: Check TypeScript compilation
+        run: |
+          cd ${{ env.Backend_dir }}
+          npm run type-check

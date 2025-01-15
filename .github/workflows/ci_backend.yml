@@ -1,4 +1,4 @@
-name: CI Workflow
+name: CI Backend Workflow
 
 on:
   push:
@@ -32,10 +32,10 @@ jobs:
           cd ${{ env.Frontend_dir }}
           npm install
 
-      - name: Run Prettier
-        run: |
-          cd ${{ env.Frontend_dir }}
-          npm run format
+      # - name: Run Prettier
+      #   run: |
+      #     cd ${{ env.Frontend_dir }}
+      #     npm run format
 
       - name: Build the project
         run: |
